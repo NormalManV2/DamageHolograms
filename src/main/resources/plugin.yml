@@ -3,3 +3,4 @@ version: '${project.version}'
 main: nuclearkat.damageholograms.DamageHolograms
 api-version: 1.20
 
+
