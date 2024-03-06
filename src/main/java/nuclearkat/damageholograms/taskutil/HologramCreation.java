@@ -10,7 +10,6 @@ import org.bukkit.entity.TextDisplay;
 import java.util.ArrayList;
 import java.util.List;
 
-//
 public class HologramCreation {
 
     private final String id;
