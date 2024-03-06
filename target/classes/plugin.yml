@@ -1,0 +1,5 @@
+name: DamageHolograms
+version: '1.0-SNAPSHOT'
+main: nuclearkat.damageholograms.DamageHolograms
+api-version: 1.20
+
