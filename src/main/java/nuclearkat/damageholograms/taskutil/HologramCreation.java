@@ -9,17 +9,16 @@ import org.bukkit.entity.TextDisplay;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 public class HologramCreation {
 
-    private final String id;
     private final Location location;
     private final List<String> lines;
     private final List<TextDisplay> textDisplays;
     private final List<Location> offsets;
 
-    public HologramCreation(String id, Location location, List<String> lines) {
-        this.id = id;
+    public HologramCreation(Location location, List<String> lines) {
         this.location = location;
         this.lines = lines;
         this.textDisplays = new ArrayList<>();
@@ -44,6 +43,10 @@ public class HologramCreation {
 
     public void teleportHologram(Location newLocation) {
         for (int i = 0; i < textDisplays.size(); i++) {
+            if (newLocation == null) {
+                Bukkit.getLogger().log(Level.WARNING, "New location for hologram is null!");
+                return;
+            }
             Location offset = offsets.get(i);
             Location displayLocation = newLocation.clone().add(offset);
             textDisplays.get(i).teleport(displayLocation);
@@ -60,4 +63,3 @@ public class HologramCreation {
         }
     }
 }
-

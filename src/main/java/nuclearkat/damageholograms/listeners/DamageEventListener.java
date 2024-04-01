@@ -1,5 +1,6 @@
 package nuclearkat.damageholograms.listeners;
 
+import nuclearkat.damageholograms.DamageHolograms;
 import nuclearkat.damageholograms.taskutil.HologramCreation;
 import nuclearkat.damageholograms.taskutil.HologramTasks;
 import org.bukkit.ChatColor;
@@ -17,9 +18,11 @@ import java.util.UUID;
 public class DamageEventListener implements Listener {
 
     private final HologramTasks hologramTasks;
+    private final DamageHolograms damageHolograms;
 
-    public DamageEventListener(HologramTasks hologramTasks) {
+    public DamageEventListener(HologramTasks hologramTasks, DamageHolograms damageHolograms) {
         this.hologramTasks = hologramTasks;
+        this.damageHolograms = damageHolograms;
     }
 
     @EventHandler
@@ -28,10 +31,10 @@ public class DamageEventListener implements Listener {
             Location location = e.getEntity().getLocation().add(0, 1.0, 0);
             List<String> damageAmountList = new ArrayList<>();
             DecimalFormat decimalFormat = new DecimalFormat("0.00");
-            String damageAmount = ChatColor.translateAlternateColorCodes('&', "&b" + decimalFormat.format(e.getDamage()));
+            String damageAmount = ChatColor.translateAlternateColorCodes('&', damageHolograms.getConfig().get("damagehologram.color") + decimalFormat.format(e.getDamage()));
             damageAmountList.add(damageAmount);
 
-            HologramCreation damageAmountHologram = new HologramCreation(UUID.randomUUID().toString(), location, damageAmountList);
+            HologramCreation damageAmountHologram = new HologramCreation(location, damageAmountList);
 
             hologramTasks.trackHologram(damageAmountHologram);
         }

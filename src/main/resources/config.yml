@@ -1,0 +1,5 @@
+damagehologram:
+  color: "&b"
+resetcommand:
+  nopermissionmessage: "&cYou do not have permission to use this command!"
+  hologramresetsuccessmessage: "&bHolograms reset successfully!"
