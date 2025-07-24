@@ -23,42 +23,47 @@ public class HologramCreation {
         this.lines = lines;
         this.textDisplays = new ArrayList<>();
         this.offsets = new ArrayList<>();
-        createTextDisplays();
+        this.createTextDisplays();
     }
 
     private void createTextDisplays() {
-        for (int i = 0; i < lines.size(); i++) {
-            String line = lines.get(i);
-            TextDisplay textDisplay = Bukkit.getWorld("world").spawn(location.clone().add(0, -i * 0.25, 0), TextDisplay.class, display -> {
-                display.setText(ChatColor.translateAlternateColorCodes('&', line));
+
+        if (this.location.getWorld() == null) {
+            throw new RuntimeException("World is null when creating holograms!");
+        }
+
+        for (int i = 0; i < this.lines.size(); i++) {
+            String line = this.lines.get(i);
+            TextDisplay textDisplay = this.location.getWorld().spawn(this.location.clone().add(0, -i * 0.25, 0), TextDisplay.class, display -> {
+                display.setText(line);
                 display.setBillboard(Display.Billboard.CENTER);
                 int color = 0x00000000;
                 display.setBackgroundColor(Color.fromARGB(color));
             });
-            textDisplays.add(textDisplay);
+            this.textDisplays.add(textDisplay);
 
-            offsets.add(textDisplay.getLocation().subtract(location));
+            this.offsets.add(textDisplay.getLocation().subtract(this.location));
         }
     }
 
     public void teleportHologram(Location newLocation) {
-        for (int i = 0; i < textDisplays.size(); i++) {
+        for (int i = 0; i < this.textDisplays.size(); i++) {
             if (newLocation == null) {
                 Bukkit.getLogger().log(Level.WARNING, "New location for hologram is null!");
                 return;
             }
-            Location offset = offsets.get(i);
+            Location offset = this.offsets.get(i);
             Location displayLocation = newLocation.clone().add(offset);
-            textDisplays.get(i).teleport(displayLocation);
+            this.textDisplays.get(i).teleport(displayLocation);
         }
     }
 
     public Location getLocation() {
-        return location;
+        return this.location;
     }
 
     public void despawn() {
-        for (TextDisplay textDisplay : textDisplays) {
+        for (TextDisplay textDisplay : this.textDisplays) {
             textDisplay.remove();
         }
     }

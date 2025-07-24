@@ -9,34 +9,22 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public final class DamageHolograms extends JavaPlugin {
 
-    private static final DamageHolograms instance = new DamageHolograms();
     private HologramTasks hologramTasks;
-    private HologramCreation hologramCreation;
 
     @Override
     public void onEnable() {
-        hologramTasks = HologramTasks.getInstance();
-        registerListeners();
-        new BukkitRunnable(){
-            @Override
-            public void run() {
-                hologramTasks.run();
-            }
-        }.runTaskTimer(this, 0, 1);
+        this.saveDefaultConfig();
+        this.hologramTasks = HologramTasks.getInstance();
+        this.registerListeners();
+        this.registerCommands();
+        Bukkit.getScheduler().runTaskTimer(this, () -> this.hologramTasks.run(), 0, 2);
     }
 
     private void registerListeners(){
-        Bukkit.getPluginManager().registerEvents(new DamageEventListener(hologramTasks, this), this);
+        Bukkit.getPluginManager().registerEvents(new DamageEventListener(this), this);
     }
     private void registerCommands(){
-        getCommand("resetholograms").setExecutor(new ResetHologramCommand(hologramCreation));
-    }
-
-    private DamageHolograms(){
-
-    }
-    public static DamageHolograms getInstance(){
-        return instance;
+        getCommand("resetholograms").setExecutor(new ResetHologramCommand(this));
     }
 
     @Override

@@ -1,6 +1,6 @@
 package nuclearkat.damageholograms;
 
-import nuclearkat.damageholograms.taskutil.HologramCreation;
+import nuclearkat.damageholograms.taskutil.HologramTasks;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -9,12 +9,11 @@ import org.bukkit.entity.Player;
 
 public class ResetHologramCommand implements CommandExecutor {
 
-    private final DamageHolograms damageHolograms = DamageHolograms.getInstance();
+    private final DamageHolograms plugin;
+    private final HologramTasks hologramTasks = HologramTasks.getInstance();
 
-    private HologramCreation hologramCreation;
-
-    public ResetHologramCommand(HologramCreation hologramCreation){
-        this.hologramCreation = hologramCreation;
+    public ResetHologramCommand(DamageHolograms plugin){
+        this.plugin = plugin;
     }
 
     @Override
@@ -26,12 +25,12 @@ public class ResetHologramCommand implements CommandExecutor {
 
         Player player = (Player) commandSender;
         if (!player.hasPermission("dh.resetcommand")){
-            String noPermissionMessage = damageHolograms.getConfig().getString("resetcommand.nopermissionmessage");
+            String noPermissionMessage = plugin.getConfig().getString("reset_command.no_permission_message", "&cYou do not have permission to use this command!");
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', noPermissionMessage));
             return false;
         }
-        hologramCreation.despawn();
-        String hologramResetSuccessMessage = damageHolograms.getConfig().getString("resetcommand.hologramresetsuccessmessage");
+        this.hologramTasks.despawnAll();
+        String hologramResetSuccessMessage = this.plugin.getConfig().getString("reset_command.hologram_reset_success_message", "&bHolograms reset successfully!");
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', hologramResetSuccessMessage));
 
         return true;

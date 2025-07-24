@@ -16,26 +16,31 @@ import java.util.List;
 
 public class DamageEventListener implements Listener {
 
-    private final HologramTasks hologramTasks;
+    private final HologramTasks hologramTasks = HologramTasks.getInstance();
     private final DamageHolograms damageHolograms;
 
-    public DamageEventListener(HologramTasks hologramTasks, DamageHolograms damageHolograms) {
-        this.hologramTasks = hologramTasks;
+    public DamageEventListener(DamageHolograms damageHolograms) {
         this.damageHolograms = damageHolograms;
     }
 
     @EventHandler
     private void onDamage(EntityDamageByEntityEvent e) {
-        if (e.getDamager() instanceof Player) {
-            Location location = e.getEntity().getLocation().add(0, 1.0, 0);
-            List<String> damageAmountList = new ArrayList<>();
-            DecimalFormat decimalFormat = new DecimalFormat("0.00");
-            String damageAmount = ChatColor.translateAlternateColorCodes('&', damageHolograms.getConfig().get("damagehologram.color") + decimalFormat.format(e.getDamage()));
-            damageAmountList.add(damageAmount);
-
-            HologramCreation damageAmountHologram = new HologramCreation(location, damageAmountList);
-
-            hologramTasks.trackHologram(damageAmountHologram);
+        if (e.isCancelled()) {
+            return;
         }
+
+        if (!(e.getDamager() instanceof Player)) {
+            return;
+        }
+
+        Location location = e.getEntity().getLocation().add(0, 1.0, 0);
+        List<String> damageAmountList = new ArrayList<>();
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        String damageAmount = ChatColor.translateAlternateColorCodes('&', damageHolograms.getConfig().get("damage_hologram.color") + decimalFormat.format(e.getDamage()));
+        damageAmountList.add(damageAmount);
+
+        HologramCreation damageAmountHologram = new HologramCreation(location, damageAmountList);
+
+        this.hologramTasks.trackHologram(damageAmountHologram);
     }
 }
